@@ -6,7 +6,7 @@ dotenv.config()
 
 const pool = new Pool( {
     user: process.env.DB_USER,
-    host: "localhost",
+    host: "cdgn4ufq38ipd0.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com" || "localhost",
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: 5432

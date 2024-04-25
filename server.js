@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import { promisify } from 'util'
 import { pool } from './db.js'
 import { checkMembership, checkAdmin, alreadyJoined, checkMsgAuthor } from './middleware.js'
-const port = 3000;
+const port = process.env.PORT || 3000;
 const server = express();
 const client = await pool.connect()
 dotenv.config()
@@ -241,7 +241,7 @@ server.patch('/api/lobby/:id/:msgId', checkMsgAuthor, async (req, res) => {
 
 
 
-server.listen(process.env.PORT || 3000, () => {
+server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 })
 
