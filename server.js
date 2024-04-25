@@ -241,7 +241,7 @@ server.patch('/api/lobby/:id/:msgId', checkMsgAuthor, async (req, res) => {
 
 
 
-server.listen(port, () => {
+server.listen(process.env.PORT || 3000, () => {
     console.log(`Listening on port: ${port}`);
 })
 
