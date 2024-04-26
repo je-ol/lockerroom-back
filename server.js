@@ -18,7 +18,15 @@ const getMsgID = () => {
     return String(num).padStart(6, '0')
 }
 
-server.use(cors());
+const corsOptions = {
+    origin: 'http://127.0.0.1:5174', // Allow requests from this origin
+    methods: 'GET, POST, PUT, DELETE', // Allow these HTTP methods
+    allowedHeaders: 'Content-Type, Authorization', // Allow these headers
+    credentials: true, // Allow cookies to be sent
+  };
+  
+server.use(cors(corsOptions));
+
 server.use(express.json())
 
 // Register new users
