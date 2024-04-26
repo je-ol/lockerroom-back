@@ -4,7 +4,7 @@ import JWT from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { promisify } from 'util'
 import { pool } from './db.js'
-const cors = require('cors');
+import cors from 'cors'
 import { checkMembership, checkAdmin, alreadyJoined, checkMsgAuthor } from './middleware.js'
 const port = process.env.PORT || 3000;
 const server = express();
@@ -18,14 +18,14 @@ const getMsgID = () => {
     return String(num).padStart(6, '0')
 }
 
-const corsOptions = {
+/* const corsOptions = {
     origin: 'http://127.0.0.1:5174', // Allow requests from this origin
     methods: 'GET, POST, PUT, DELETE', // Allow these HTTP methods
     allowedHeaders: 'Content-Type, Authorization', // Allow these headers
     credentials: true, // Allow cookies to be sent
-  };
+  }; */
   
-server.use(cors(corsOptions));
+server.use(cors());
 
 server.use(express.json())
 
