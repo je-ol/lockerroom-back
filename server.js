@@ -4,6 +4,7 @@ import JWT from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { promisify } from 'util'
 import { pool } from './db.js'
+const cors = require('cors');
 import { checkMembership, checkAdmin, alreadyJoined, checkMsgAuthor } from './middleware.js'
 const port = process.env.PORT || 3000;
 const server = express();
@@ -17,6 +18,7 @@ const getMsgID = () => {
     return String(num).padStart(6, '0')
 }
 
+server.use(cors());
 server.use(express.json())
 
 // Register new users
@@ -104,9 +106,9 @@ server.use(async (req, res, next) => {
 server.get('/api/home', (req, res) => {
     res.send({ info: 'Welcome, ' + req.user.username })
 })
-server.get('/api/members', async (req, res) => {
-    // show only the members of lobbies you are admin of...
 
+server.get('/api/members', async (req, res) => {
+    // show only the members of lobbies you are admin of
 
     const q = await client.query('SELECT member, in_lobby FROM roles')
     return res.send(q.rows)
@@ -115,7 +117,7 @@ server.get('/api/members', async (req, res) => {
 // 
 server.post('/api/create-lobby', async (req, res) => {
     // request must contain username(creator) and name of lobby(id, n in the 100s)
-    // Setting necesary variables
+    // Setting up necesary variables
     const messageID = getMsgID()
     const { username } = await req.user
     const { lobby_id } = await req.body
