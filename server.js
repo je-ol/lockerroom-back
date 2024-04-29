@@ -122,7 +122,7 @@ server.get('/api/members', async (req, res) => {
 
 // 
 server.post('/api/create-lobby', async (req, res) => {
-    // request must contain username(creator) and name of lobby(id, n in the 100s)
+    // request must contain username(creator) and title for the lobby
     // Setting up necesary variables
     const messageID = getMsgID()
     
@@ -156,6 +156,7 @@ server.post('/api/create-lobby', async (req, res) => {
         const intoRolesDB = await client.query('INSERT INTO roles(member, in_lobby, role) VALUES ($1, $2, $3)', [member_id, lobby_id, 'Admin'])
 
         res.status(200).send({ message: `Lobby ${lobby_id} was succefully created by ${username}` })
+            .setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5174');
     } catch (err) {
         res.status(500).send({ info: 'Error setting up lobby' })
     }
