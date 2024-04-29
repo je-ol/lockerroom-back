@@ -17,16 +17,8 @@ const getMsgID = () => {
     const num = Math.floor(Math.random() * 999999) + 1
     return String(num).padStart(6, '0')
 }
-
-/* const corsOptions = {
-    origin: 'http://127.0.0.1:5174', // Allow requests from this origin
-    methods: 'GET, POST, PUT, DELETE', // Allow these HTTP methods
-    allowedHeaders: 'Content-Type, Authorization', // Allow these headers
-    credentials: true, // Allow cookies to be sent
-  }; */
   
 server.use(cors());
-
 server.use(express.json())
 
 // Register new users
@@ -127,12 +119,23 @@ server.post('/api/create-lobby', async (req, res) => {
     // request must contain username(creator) and name of lobby(id, n in the 100s)
     // Setting up necesary variables
     const messageID = getMsgID()
+    
     const { username } = await req.user
-    const { lobby_id } = await req.body
+    const { title } = await req.body
+    const currentLobbies = await client.query('SELECT lobby_id FROM lobbies')
+    function genLobbyId() {
+        let lobby_id;
+        do {
+          lobby_id = Math.floor(Math.random() * 900) + 100;
+        } while (currentLobbies.some(lobby => lobby.lobby_id === lobby_id)); 
+        return lobby_id;
+      }
+    const lobby_id = await genLobbyId();
+
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username])).rows[0].member_id;
-    try {// Create lobby
-        const intoLobbiesDB = await client.query(`INSERT INTO lobbies (lobby_id, created_by) VALUES (${lobby_id}, ${member_id})`)
+    try { // Create lobby
+        const intoLobbiesDB = await client.query(`INSERT INTO lobbies (lobby_id, created_by, title) VALUES (${lobby_id}, ${member_id}, ${title})`)
 
         const newLobby = await client.query(`CREATE TABLE lobby_${lobby_id} (
         lobby_id INT REFERENCES lobbies(lobby_id),
