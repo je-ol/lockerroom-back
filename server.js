@@ -118,13 +118,15 @@ server.get('/api/members', async (req, res) => {
 server.post('/api/create-lobby', async (req, res) => {
     // request must contain username(creator) and name of lobby(id, n in the 100s)
     // Setting up necesary variables
+    console.log(req.body)
     const messageID = getMsgID()
     const { username } = await req.user
-    const { lobby_id } = await req.body
+    const lobby_id = Math.floor(Math.random() * 900) + 100
+    const { title } = await req.body
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username])).rows[0].member_id;
     try {// Create lobby
-        const intoLobbiesDB = await client.query(`INSERT INTO lobbies (lobby_id, created_by) VALUES (${lobby_id}, ${member_id})`)
+        const intoLobbiesDB = await client.query(`INSERT INTO lobbies (lobby_id, created_by, title) VALUES (${lobby_id}, ${member_id}, '${title}')`)
 
         const newLobby = await client.query(`CREATE TABLE lobby_${lobby_id} (
         lobby_id INT REFERENCES lobbies(lobby_id),
