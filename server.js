@@ -136,7 +136,7 @@ server.post('/api/create-lobby', async (req, res) => {
         } while (currentLobbies.includes(lobby_id)); 
         return lobby_id;
       }
-    const lobby_id = genLobbyId();
+    const lobby_id = 105;
 
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username])).rows[0].member_id;
@@ -156,7 +156,6 @@ server.post('/api/create-lobby', async (req, res) => {
         const intoRolesDB = await client.query('INSERT INTO roles(member, in_lobby, role) VALUES ($1, $2, $3)', [member_id, lobby_id, 'Admin'])
 
         res.status(200).send({ message: `Lobby ${lobby_id} was succefully created by ${username}` })
-            .setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5174');
     } catch (err) {
         res.status(500).send({ info: 'Error setting up lobby' })
     }
