@@ -229,7 +229,11 @@ server.post('/api/lobby/:id/add-user', checkAdmin, async (req, res) => {
         return res.status(500).send({ error: 'Internal server error' })
     }
 })
-
+//Get all lobbies
+server.get('/api/lobbies', async (req, res) => {
+    const q = await client.query('SELECT * FROM lobbies')
+    return res.send(q.rows)
+})
 // Edit or delete routes:
 
 // Edit a specific msg in a lobby, need to either be the author or be an admin of the server { "message": "----"}
