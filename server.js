@@ -18,7 +18,10 @@ const getMsgID = () => {
     return String(num).padStart(6, '0')
 }
   
-server.use(cors());
+server.use(cors({
+    origin: '*',
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 server.use(express.json())
 
 // Register new users
