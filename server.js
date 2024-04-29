@@ -136,7 +136,7 @@ server.post('/api/create-lobby', async (req, res) => {
         let lobby_id;
         do {
           lobby_id = Math.floor(Math.random() * 900) + 100;
-        } while (currentLobbies.some(lobby => lobby.lobby_id === lobby_id)); 
+        } while (currentLobbies.includes(lobby_id)); 
         return lobby_id;
       }
     const lobby_id = await genLobbyId();
