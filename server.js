@@ -20,7 +20,9 @@ const getMsgID = () => {
   
 server.use(cors({
     origin: 'http://127.0.0.1:5174',
-    allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+    credentials: true
   }));
 server.use(express.json())
 
