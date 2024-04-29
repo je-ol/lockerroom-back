@@ -128,14 +128,14 @@ server.post('/api/create-lobby', async (req, res) => {
     
     const { username } = await req.user
     const { title } = await req.body
-    const currentLobbies = await client.query('SELECT lobby_id FROM lobbies')
+/*     const currentLobbies = await client.query('SELECT lobby_id FROM lobbies')
     function genLobbyId() {
         let lobby_id;
         do {
           lobby_id = Math.floor(Math.random() * 900) + 100;
         } while (currentLobbies.includes(lobby_id)); 
         return lobby_id;
-      }
+      } */
     const lobby_id = 105;
 
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
