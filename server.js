@@ -122,9 +122,10 @@ server.get('/api/members', async (req, res) => {
 
 // 
 server.post('/api/create-lobby', async (req, res) => {
+    console.log(req.body)
     res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5174');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
     // request must contain username(creator) and name of lobby(id, n in the 100s)
     // Setting up necesary variables
     const messageID = getMsgID()
