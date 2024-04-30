@@ -5,7 +5,8 @@ const checkMembership = async (req, res, next) => {
     const { username } = await req.user;
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username && username])).rows[0].member_id;
-    const lobby_id = req.params.id
+    const lobby_id = await req.params.id
+    console.log(lobby_id, username, member_id)
     // search for lobbies associated to user
     const searchQ = await client.query(`SELECT * FROM roles WHERE member = ${member_id} AND in_lobby = ${lobby_id}`)
     if (searchQ.rows.length > 0) {
