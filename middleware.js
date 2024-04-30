@@ -3,44 +3,19 @@ import { client } from "./server.js";
 // Check if user is part of server
 const checkMembership = async (req, res, next) => {
     const { username } = req.user;
-
-    try {
-        const result = await client.query(
-            'SELECT member_id FROM members WHERE username=$1',
-            [username ? username : '']
-        );
-
-        if (result.rows.length === 0) {
-            console.log('User not found');
-            return res.status(401).send({ error: 'You are not a member of this lobby' });
-        }
-
-        const member_id = result.rows[0].member_id;
-        const lobby_id = req.params.id;
-
-        if (!lobby_id) {
-            console.log('Lobby ID is undefined');
-            return res.status(400).send({ error: 'Lobby ID is required' });
-        }
-
-        const searchQ = await client.query(
-            'SELECT * FROM roles WHERE member = $1 AND in_lobby = $2',
-            [member_id, lobby_id]
-        );
-
-        if (searchQ.rows.length > 0) {
-            console.log('Found user');
-            next();
-        } else {
-            console.log('User not found');
-            return res.status(401).send({ error: 'You are not a member of this lobby' });
-        }
-    } catch (error) {
-        console.error('Error checking membership:', error);
-        return res.status(500).send({ error: 'Internal server error' });
+    const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
+        [username])).rows[0].member_id;
+    const lobby_id = req.params.id
+    // search for lobbies associated to user
+    const searchQ = await client.query(`SELECT * FROM roles WHERE member = ${member_id} AND in_lobby = ${lobby_id}`)
+    if (searchQ.rows.length > 0) {
+        console.log('found user')
+        next()
+    } else {
+        console.log('user not found')
+        return res.status(401).send({ error: 'You are not a member of this lobby' })
     }
-};
-
+}
 
 const checkAdmin = async (req, res, next) => {
     try {
