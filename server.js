@@ -164,7 +164,7 @@ server.get('/api/lobby/:id/members', checkMembership, async (req, res) => {
 
 // See all the messages posted in a given lobby, need to be member
 server.get(`/api/lobby/:id`, checkMembership, async (req, res) => {
-    const lobby_id = await req.params.id
+    const lobby_id = req.params.id
     try {
         const result = await client.query(`SELECT l.message, l.message_id, m.username
         FROM lobby_${lobby_id} l
@@ -176,7 +176,7 @@ server.get(`/api/lobby/:id`, checkMembership, async (req, res) => {
         }))
         res.send({ messages })
     } catch (err) {
-        res.send('Lobby not found')
+        res.status(500).send('Internal Server Error');
     }
 })
 
