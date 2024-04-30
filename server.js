@@ -123,13 +123,11 @@ server.post('/api/create-lobby', async (req, res) => {
     const { username } = await req.user
     const lobby_id = Math.floor(Math.random() * 900) + 100
     const { title } = await req.body
-    try {
+    
         const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username])).rows[0].member_id;
-    } catch (err) {
-        console.log(err)
-        return res.status(404).send({ error: 'User not found' })
-    }
+        console.log(member_id, lobby_id, title)
+    
     try {// Create lobby
         const intoLobbiesDB = await client.query(`INSERT INTO lobbies (lobby_id, created_by, title) VALUES (${lobby_id}, ${member_id}, '${title}')`)
 
