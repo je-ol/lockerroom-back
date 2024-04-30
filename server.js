@@ -123,8 +123,13 @@ server.post('/api/create-lobby', async (req, res) => {
     const { username } = await req.user
     const lobby_id = Math.floor(Math.random() * 900) + 100
     const { title } = await req.body
-    const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
+    try {
+        const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username])).rows[0].member_id;
+    } catch (err) {
+        console.log(err)
+        return res.status(404).send({ error: 'User not found' })
+    }
     try {// Create lobby
         const intoLobbiesDB = await client.query(`INSERT INTO lobbies (lobby_id, created_by, title) VALUES (${lobby_id}, ${member_id}, '${title}')`)
 
@@ -161,10 +166,13 @@ server.get('/api/lobby/:id/members', checkMembership, async (req, res) => {
 server.get(`/api/lobby/:id`, checkMembership, async (req, res) => {
     const lobby_id = await req.params.id
     try {
-        const result = await client.query(`SELECT message, message_id FROM lobby_${lobby_id}`);
+        const result = await client.query(`SELECT l.message, l.message_id, m.username
+        FROM lobby_${lobby_id} l
+        JOIN members m ON l.author_id = m.member_id`);
         const messages = result.rows.map(row => ({
             message: row.message,
-            message_id: row.message_id
+            message_id: row.message_id,
+            author: row.username
         }))
         res.send({ messages })
     } catch (err) {
