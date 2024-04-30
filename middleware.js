@@ -2,7 +2,7 @@ import { client } from "./server.js";
 
 // Check if user is part of server
 const checkMembership = async (req, res, next) => {
-    const { username } = req.user;
+    const { username } = await req.user;
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
         [username && username])).rows[0].member_id;
     const lobby_id = req.params.id
