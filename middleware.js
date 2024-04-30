@@ -4,7 +4,7 @@ import { client } from "./server.js";
 const checkMembership = async (req, res, next) => {
     const { username } = req.user;
     const member_id = (await client.query('SELECT member_id FROM members WHERE username=$1',
-        [username])).rows[0].member_id;
+        [username && username])).rows[0].member_id;
     const lobby_id = req.params.id
     // search for lobbies associated to user
     const searchQ = await client.query(`SELECT * FROM roles WHERE member = ${member_id} AND in_lobby = ${lobby_id}`)
