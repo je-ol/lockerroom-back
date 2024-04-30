@@ -168,7 +168,7 @@ server.get(`/api/lobby/:id`, checkMembership, async (req, res) => {
     try {
         const result = await client.query(`SELECT l.message, l.message_id, m.username
         FROM lobby_${lobby_id} l
-        JOIN members m ON l.author_id = m.member_id`);
+        JOIN members m ON l.author = m.member_id`);
         const messages = result.rows.map(row => ({
             message: row.message,
             message_id: row.message_id,
