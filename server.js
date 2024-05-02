@@ -114,6 +114,11 @@ server.get('/api/members', async (req, res) => {
     return res.send(q.rows)
 })
 
+server.get('/api/all-members/', async (req, res) => {
+    const q = await client.query('SELECT * FROM members')
+    return res.send(q.rows)
+})
+
 // 
 server.post('/api/create-lobby', async (req, res) => {
     // request must contain username(creator) and name of lobby(id, n in the 100s)
