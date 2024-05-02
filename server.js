@@ -115,8 +115,8 @@ server.get('/api/members', async (req, res) => {
 })
 
 server.get('/api/all-members/', async (req, res) => {
-    const q = await client.query('SELECT * FROM members')
-    return res.send(q.rows.username)
+    const q = await client.query('SELECT username FROM members')
+    return res.send(q.rows)
 })
 
 // 
