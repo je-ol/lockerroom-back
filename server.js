@@ -6,6 +6,25 @@ import { promisify } from 'util'
 import { pool } from './db.js'
 import cors from 'cors'
 import { checkMembership, checkAdmin, alreadyJoined, checkMsgAuthor } from './middleware.js'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+
+const httpServer = createServer(server)
+const io = new Server(httpServer, {
+    cors: {
+        origin: 'http://127.0.0.1:5173',
+        methods: ['GET', 'POST', 'PATCH', 'DELETE']
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log(`User connected: ${socket.id}`);
+    socket.on("disconnect", () => {
+        console.log("User disconnected");
+    });
+});
+
+
 const port = process.env.PORT || 3000;
 const server = express();
 const client = await pool.connect()
@@ -260,7 +279,7 @@ server.patch('/api/lobby/:id/:msgId', checkMsgAuthor, async (req, res) => {
 
 
 
-server.listen(port, () => {
+httpServer.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 })
 
