@@ -108,7 +108,7 @@ server.get('/api/home', (req, res) => {
 })
 
 server.get('/api/members', async (req, res) => {
-    // show only the members of lobbies you are admin of
+    // show current members and the lobbies they are part of
 
     const q = await client.query('SELECT member, in_lobby FROM roles')
     return res.send(q.rows)
@@ -121,9 +121,8 @@ server.get('/api/all-members/', async (req, res) => {
 
 // 
 server.post('/api/create-lobby', async (req, res) => {
-    // request must contain username(creator) and name of lobby(id, n in the 100s)
-    // Setting up necesary variables
-    console.log(req.body)
+    // request must contain name of lobby, the id is randomly generated, an automated welcome message is added
+    // Setting up necesary variables:
     const messageID = getMsgID()
     const { username } = await req.user
     const lobby_id = Math.floor(Math.random() * 900) + 100
